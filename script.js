@@ -18,13 +18,13 @@ function getIssues() {
 
 getIssues();
 
-document.getElementById('load-next').addEventListener('click', () => {
+document.getElementById('load_next').addEventListener('click', () => {
   currentPageNumber++;
   pageHeading.textContent = `Page number ${currentPageNumber}`;
   getIssues();
 });
 
-document.getElementById('load-prev').addEventListener('click', () => {
+document.getElementById('load_prev').addEventListener('click', () => {
   if (currentPageNumber > 1) {
     currentPageNumber--;
     pageHeading.textContent = `Page number ${currentPageNumber}`;
