@@ -1,44 +1,35 @@
 //your code here
-let currentPage = 1;
-		const apiUrl = `https://api.github.com/repositories/1296269/issues?page=${currentPage}&per_page=5`;
-		const issueList = document.getElementById('issue-list');
-		const loadPrevButton = document.getElementById('load_prev');
-		const loadNextButton = document.getElementById('load_next');
-		const pageHeader = document.querySelector('h1');
+const issuesList = document.getElementById('issues-list');
+const pageHeading = document.getElementById('page-heading');
+let currentPageNumber = 1;
+
+function getIssues() {
+  fetch(`https://api.github.com/repositories/1296269/issues?page=${currentPageNumber}&per_page=5`)
+    .then(response => response.json())
+    .then(issues => {
+      issuesList.innerHTML = '';
+      issues.forEach(issue => {
+        const issueItem = document.createElement('li');
+        issueItem.textContent = issue.title;
+        issuesList.appendChild(issueItem);
+      });
+    });
+}
+
+getIssues();
+
+document.getElementById('load-next').addEventListener('click', () => {
+  currentPageNumber++;
+  pageHeading.textContent = `Page number ${currentPageNumber}`;
+  getIssues();
+});
+
+document.getElementById('load-prev').addEventListener('click', () => {
+  if (currentPageNumber > 1) {
+    currentPageNumber--;
+    pageHeading.textContent = `Page number ${currentPageNumber}`;
+    getIssues();
+  }
+});
+					
 		
-		function loadIssues() {
-			fetch(apiUrl)
-				.then(response => response.json())
-				.then(issues => {
-					// Clear the previous issue list
-					issueList.innerHTML = '';
-					// Display each issue title in an ordered list
-					issues.forEach(issue => {
-						const li = document.createElement('li');
-						li.textContent = issue.title;
-						issueList.appendChild(li);
-					});
-				})
-				.catch(error => console.log(error));
-		}
-		
-		// Load issues for the first time
-		loadIssues();
-		
-		// Load the next page of issues
-		loadNextButton.addEventListener('click', () => {
-			currentPage++;
-			apiUrl = `https://api.github.com/repositories/1296269/issues?page=${currentPage}&per_page=5`;
-			pageHeader.textContent = `Page number ${currentPage}`;
-			loadIssues();
-		});
-		
-		// Load the previous page of issues
-		loadPrevButton.addEventListener('click', () => {
-			if (currentPage > 1) {
-				currentPage--;
-				apiUrl = `https://api.github.com/repositories/1296269/issues?page=${currentPage}&per_page=5`;
-				pageHeader.textContent = `Page number ${currentPage}`;
-				loadIssues();
-			}
-		});
